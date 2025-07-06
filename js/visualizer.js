@@ -57,6 +57,7 @@ class GraphTraversalVisualizer {
         this.edges = edges;
         this.graph = graph;
         this.createVisualGraph();
+        this.lastRedNode = undefined;
         updateQueueStackUI('queue', []);
         setStepButtonState(false);
     }
@@ -125,9 +126,11 @@ class GraphTraversalVisualizer {
         this.currentNode = null;
         this.stepCount = 0;
         this.startTime = null;
+        this.lastRedNode = undefined;
         this.nodeObjects.forEach(obj => {
             obj.sphere.material.color.setHex(obj.originalColor);
-            obj.halo.material.opacity = 0.1;
+            obj.sphere.material.opacity = 0.95;
+            obj.halo.visible = true;
         });
         this.edgeObjects.forEach(obj => {
             obj.line.material.color.setHex(obj.originalColor);
@@ -193,8 +196,25 @@ class GraphTraversalVisualizer {
     updateNodeVisual(nodeId, color) {
         const nodeObj = this.nodeObjects[nodeId];
         if (nodeObj) {
-            nodeObj.sphere.material.color.setHex(color);
-            nodeObj.halo.material.opacity = 0.3;
+            // Si c'est le dernier nœud visité (rouge vif, opaque, sans halo)
+            if (color === 0xff2d55) {
+                if (this.lastRedNode !== undefined && this.lastRedNode !== nodeId) {
+                    const prevObj = this.nodeObjects[this.lastRedNode];
+                    if (prevObj) prevObj.halo.visible = true;
+                }
+                nodeObj.sphere.material.color.setHex(0xff0000); // rouge vif
+                nodeObj.sphere.material.opacity = 1.0;
+                nodeObj.halo.visible = false;
+                this.lastRedNode = nodeId;
+            } else if (color === 0xff6b6b) { // nœud déjà visité (sauf le dernier)
+                nodeObj.sphere.material.color.setHex(0xff2d55); // même rose vif
+                nodeObj.sphere.material.opacity = 0.4; // plus transparent
+                nodeObj.halo.visible = true;
+            } else {
+                nodeObj.sphere.material.color.setHex(color);
+                nodeObj.sphere.material.opacity = 0.95;
+                nodeObj.halo.visible = true;
+            }
             const originalScale = nodeObj.sphere.scale.clone();
             nodeObj.sphere.scale.multiplyScalar(1.3);
             setTimeout(() => {
@@ -269,6 +289,7 @@ class GraphTraversalVisualizer {
     animate() {
         requestAnimationFrame(() => this.animate());
         const time = Date.now() * 0.0005;
+        // Rotation automatique de la caméra en continu
         this.camera.position.x = Math.cos(time) * 30;
         this.camera.position.z = Math.sin(time) * 30;
         this.camera.lookAt(0, 0, 0);
