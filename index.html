@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisation des Algorithmes de Parcours de Graphes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        <div id="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithme:</label>
+                <select id="algorithm">
+                    <option value="bfs">Parcours en largeur (BFS)</option>
+                    <option value="dfs">Parcours en profondeur (DFS)</option>
+                    <option value="dijkstra">Dijkstra</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="speed">Vitesse:</label>
+                <select id="speed">
+                    <option value="2000">Lent</option>
+                    <option value="1000" selected>Normal</option>
+                    <option value="500">Rapide</option>
+                    <option value="100">Très rapide</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="nodeCount">Nombre de nœuds :</label>
+                <input type="number" id="nodeCount" min="3" max="50" value="12" />
+            </div>
+            <div class="control-group">
+                <label for="mode">Mode :</label>
+                <select id="mode">
+                    <option value="auto" selected>Automatique</option>
+                    <option value="manual">Pas-à-pas manuel</option>
+                </select>
+            </div>
+            <button id="stepBtn" disabled>Étape suivante</button>
+            <button id="startBtn">Démarrer l'algorithme</button>
+            <button id="resetBtn">Réinitialiser</button>
+            <button id="generateBtn">Nouveau graphe</button>
+        </div>
+        <div id="info">
+            <h3>Instructions</h3>
+            <p>• Cliquez sur un nœud pour définir le point de départ</p>
+            <p>• Utilisez les contrôles pour choisir l'algorithme</p>
+            <p>• Observez la visualisation en temps réel</p>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4ecdc4;"></div>
+                    <span>Départ</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff6b6b;"></div>
+                    <span>Visité</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffd93d;"></div>
+                    <span>Actuel</span>
+                </div>
+            </div>
+        </div>
+        <div id="stats">
+            <div class="stat-item">
+                <span class="stat-label">Nœuds visités:</span>
+                <span class="stat-value" id="visitedCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Étapes:</span>
+                <span class="stat-value" id="stepCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Temps:</span>
+                <span class="stat-value" id="timeElapsed">0s</span>
+            </div>
+        </div>
+        <div id="queueStackDisplay" class="queue-stack-display">
+            <h4 id="queueStackTitle">File/Pile :</h4>
+            <div id="queueStackContent"></div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="module" src="js/visualizer.js"></script>
+</body>
+</html> 
